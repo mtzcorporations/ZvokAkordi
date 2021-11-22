@@ -1,0 +1,6 @@
+pyaudio
+pyqt5
+pyqt5-tools
+pyqtGraph
+youtube_dl
+
