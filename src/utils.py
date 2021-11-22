@@ -18,4 +18,4 @@ def downloadYT(link):
 def currentDir(_file_, path):
     return str(pathlib.PurePath(_file_).parent.joinpath(path))
 
-downloadYT("https://youtu.be/T8Zj1oLGaQE")
+#downloadYT("https://youtu.be/T8Zj1oLGaQE")
