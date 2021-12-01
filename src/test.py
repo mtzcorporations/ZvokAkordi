@@ -39,8 +39,8 @@ INPUT_FRAMES_PER_BLOCK = int(RATE*INPUT_BLOCK_TIME)
 # Which Channel? (L or R)
 LR = "l"
 
-def gaussian(x, amplitude, mean, stddev):
-    return amplitude * np.exp(-((x - mean) / 4 / stddev)**2)
+def gaussian(x, x0, y0, k):
+    return -k*(x-x0)**2+y0
 
 class SpectrumAnalyzer():
     def __init__(self):
@@ -99,7 +99,7 @@ class SpectrumAnalyzer():
         self.specItem = self.specWid.getPlotItem()
         self.specItem.setMouseEnabled(y=False)
         self.specItem.setYRange(0,1000)
-        self.specItem.setXRange(0,5000, padding=0)
+        self.specItem.setXRange(1000, 2000, padding=0)
 
         self.specAxis = self.specItem.getAxis("bottom")
         self.specAxis.setLabel("Frequency [Hz]")
@@ -134,7 +134,23 @@ class SpectrumAnalyzer():
                 continue
             f, Pxx = self.get_spectrum(data)
 
-            self.specItem.plot(x=f,y=Pxx, clear=True)
+            i_max = Pxx.argmax(axis=0)
+
+            if i_max > 5:
+                try:
+                    fR = f[i_max-1:i_max+2]
+                    PR = Pxx[i_max-1:i_max+2]
+                    popt, _ = optimize.curve_fit(gaussian, fR, PR)
+                    x2 = np.linspace(fR[0], fR[-1], 10)
+                    y2 = gaussian(x2, *popt)
+
+                    M = y2.argmax(axis=0)
+                    print(x2[M], f[i_max])
+                    self.fitItem.plot(x=x2,y=y2, clear=True, pen=mkPen('r', width=3))
+                except Exception:
+                    pass
+
+            self.specItem.plot(x=f,y=Pxx, clear=False)
             QtGui.QApplication.processEvents()
 
 if __name__ == '__main__':
