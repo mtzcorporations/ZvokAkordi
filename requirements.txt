@@ -6,3 +6,4 @@ youtube_dl
 numpy
 matplotlib
 scipy
+astropy

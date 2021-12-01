@@ -12,8 +12,6 @@ class MainWindow(QtWidgets.QMainWindow):
     analyzePB: QPushButton
     linkLE: QLineEdit
 
-
-
     def __init__(self):
 
         super(MainWindow, self).__init__()  # Call the inherited classes __init__ method
