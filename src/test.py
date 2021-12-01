@@ -11,6 +11,8 @@ import struct
 import math
 import sys
 import numpy as np
+from scipy import optimize
+
 
 
 import pyqtgraph as pg
@@ -18,7 +20,7 @@ from pyqtgraph.Qt import QtGui, QtCore
 
 # Audio Format (check Audio MIDI Setup if on Mac)
 FORMAT = pyaudio.paInt16
-RATE = 96000
+RATE = 44100
 CHANNELS = 1
 
 # Set Plot Range [-RANGE,RANGE], default is nyquist/2
@@ -32,6 +34,11 @@ INPUT_FRAMES_PER_BLOCK = int(RATE * INPUT_BLOCK_TIME)
 
 # Which Channel? (L or R)
 LR = "l"
+
+def gaussian(x, amplitude, mean, stddev):
+    return amplitude * np.exp(-((x - mean) / 4 / stddev)**2)
+
+
 
 
 class SpectrumAnalyzer():
@@ -92,6 +99,10 @@ class SpectrumAnalyzer():
         self.specItem.setYRange(0, 1000)
         self.specItem.setXRange(0, RANGE, padding=0)
 
+        self.fitItem = self.specWid.getPlotItem()
+
+
+
         self.specAxis = self.specItem.getAxis("bottom")
         self.specAxis.setLabel("Frequency [Hz]")
         self.lay.addWidget(self.specWid)
@@ -111,8 +122,14 @@ class SpectrumAnalyzer():
         Pxx = np.fft.fftshift(Pxx)
         f = np.fft.fftshift(f)
         index = Pxx.argmax(axis=0)
-        fmax=f[index]
-        print(fmax)
+        fmax = f[index-5:index+5]
+        pxMax = f[index-5:index+5]
+        coeficients = np.polyfit(fmax,pxMax,2)
+        x = np.linspace(fmax[0],fmax[-1])
+        y = coeficients[0] * x**2 + coeficients[1] * x + coeficients[2]
+        popt, _ = optimize.curve_fit(gaussian, x, y)
+        y= gaussian(x,*popt)
+        self.fitItem.plot(x=x, y=y, clear=True)
         return f.tolist(), (np.absolute(Pxx)).tolist()
 
     def mainLoop(self):
@@ -127,7 +144,7 @@ class SpectrumAnalyzer():
             f=f[len(f)//2:]
             Pxx = Pxx[len(Pxx) // 2:]
 
-            self.specItem.plot(x=f, y=Pxx, clear=True)
+            #self.specItem.plot(x=f, y=Pxx, clear=True)
             QtGui.QApplication.processEvents()
 
 
