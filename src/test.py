@@ -27,14 +27,7 @@ class SpectrumAnalyzer():
         self.centralWid.setLayout(self.lay)
 
         self.specWid = pg.PlotWidget(name="spectrum")
-        self.fitItem = self.specWid.getPlotItem()
-        self.specItem = self.specWid.getPlotItem()
-        self.specItem.setMouseEnabled(y=False)
-        self.specItem.setYRange(0,2000)
-        self.specItem.setXRange(60, 10000, padding=0)
 
-        self.specAxis = self.specItem.getAxis("bottom")
-        self.specAxis.setLabel("Frequency [Hz]")
         self.lay.addWidget(self.specWid)
 
         self.mainWindow.show()
@@ -47,17 +40,7 @@ class SpectrumAnalyzer():
     def mainLoop(self):
         while 1:
             # Sometimes Input overflowed because of mouse events, ignore this
-            try:
-                data = self.audio.readData()
-            except IOError:
-                continue
-            f, Pxx = self.audio.get_spectrum(data)
-            info=findPeak(f,Pxx)
-            if info is not None:
-                self.fitItem.plot(x=info[1], y=info[2], clear=True, pen=mkPen('r', width=3))
-                self.specItem.plot(x=f,y=Pxx, clear=False)
-            else:
-                self.specItem.plot(x=f, y=Pxx, clear=True)
+
             QtGui.QApplication.processEvents()
 
 if __name__ == '__main__':

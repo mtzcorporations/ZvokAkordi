@@ -19,6 +19,9 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
+     <widget class="PlotWidget" name="plotW"/>
+    </item>
+    <item>
      <widget class="QPlainTextEdit" name="infoPTE"/>
     </item>
     <item>
@@ -38,6 +41,13 @@
    </layout>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PlotWidget</class>
+   <extends>QGraphicsView</extends>
+   <header>pyqtgraph</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
