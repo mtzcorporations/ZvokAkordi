@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import QPushButton, QLineEdit, QPlainTextEdit
 from pyqtgraph import PlotWidget, mkPen
 
 import utils
-from src.audio import Audio, findPeak
+from src.audio import Audio, findPeak, getNote
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -48,9 +48,15 @@ class MainWindow(QtWidgets.QMainWindow):
         if info is not None:
             self.fitItem.plot(x=info[1], y=info[2], clear=True, pen=mkPen('r', width=3))
             self.specItem.plot(x=f, y=Pxx, clear=False)
+            self.printNote(info[0])
         else:
             self.specItem.plot(x=f, y=Pxx, clear=True)
 
+    def printNote(self,peakFreq):
+        note = getNote(peakFreq)
+        self.infoPTE.setPlainText(f"""
+        Max f: {round(peakFreq,0)} Hz
+        Nota : {note} """)
     def onAnalyze(self):
         print("test")
         link=self.linkLE.text()
