@@ -37,6 +37,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.timer.setInterval(1000/60)  # 1000ms = 1s
         self.timer.start()
 
+        self.note = []
+
     def updateGraph(self):
         #print("test Update")
         try:
@@ -54,13 +56,23 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def printNote(self,peakFreq):
         note = getNote(peakFreq)
+
+        ## poglej če se ton obdrži dovolj časa vpiši, če se menja --> TODO
+        if len(self.note) > 0:
+            if self.note[-1] != note:
+                self.note.append(note)
+        else:
+            self.note.append(note)
         self.infoPTE.setPlainText(f"""
         Max f: {round(peakFreq,0)} Hz
-        Nota : {note} """)
+        Nota : {note} 
+        Vse Note {self.note}""")
     def onAnalyze(self):
-        print("test")
+        #print("test")
         link=self.linkLE.text()
-        print(link)
+        self.note=[]
+        self.infoPTE.setPlainText(f"""""")
+        #print(link)
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
