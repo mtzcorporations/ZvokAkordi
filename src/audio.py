@@ -9,7 +9,12 @@ import numpy as np
 def exponentFun(x, x0, y0, k):
     return -k*(x-x0)**2+y0
 
+def vectorDistance(v1,v2,):
+    s=0
+    for i in range(0,len(v1)):
+        s=s+(v1[i]-v2[i])**2
 
+    return s**0.5
 
 
 def getNote(freq):

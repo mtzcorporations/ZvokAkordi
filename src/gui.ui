@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>717</width>
-    <height>550</height>
+    <width>737</width>
+    <height>571</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,6 +22,25 @@
      <widget class="PlotWidget" name="plotW"/>
     </item>
     <item>
+     <widget class="PlotWidget" name="changeW"/>
+    </item>
+    <item>
+     <widget class="QSlider" name="thresholdS">
+      <property name="maximum">
+       <number>10000</number>
+      </property>
+      <property name="singleStep">
+       <number>500</number>
+      </property>
+      <property name="value">
+       <number>2000</number>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QPlainTextEdit" name="infoPTE"/>
     </item>
     <item>
@@ -33,6 +52,13 @@
        <widget class="QPushButton" name="analyzePB">
         <property name="text">
          <string>Analyze</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="stopPB">
+        <property name="text">
+         <string>Stop</string>
         </property>
        </widget>
       </item>
